@@ -5,7 +5,10 @@ $threshold = 90
 
 # Get current disk usage for the root directory (/)
 $diskUsageLine = df -h / | Select-String -Pattern '/.*' | ForEach-Object { $_.Line }
-$diskUsage = $diskUsageLine.Split(' ')[4].TrimEnd('%') -as [int]
+
+# The output from df -h looks like this: Filesystem Size Used Avail Use% Mounted on
+# We need to extract the 'Use%' column (which is the 5th column)
+$diskUsage = $diskUsageLine.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[4].TrimEnd('%') -as [int]
 
 # Check if disk usage exceeds threshold
 if ($diskUsage -ge $threshold) {
