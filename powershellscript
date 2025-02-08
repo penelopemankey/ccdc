@@ -1,0 +1,15 @@
+#!/usr/bin/env pwsh
+
+# Define threshold in percentage (adjust as needed)
+$threshold = 90
+
+# Get current disk usage for the root directory (/)
+$diskUsage = (df -h / | Select-String -Pattern '^[^ ]+' | ForEach-Object { $_.Line.Split(' ')[4].TrimEnd('%') }) -as [int]
+
+# Check if disk usage exceeds threshold
+if ($diskUsage -ge $threshold) {
+    Write-Host "Disk space is running low! Current usage is ${diskUsage}%"
+    # Add any actions you want to take here, such as sending an email or notification
+} else {
+    Write-Host "Disk space is still within acceptable limits. Current usage is ${diskUsage}%"
+}
