@@ -4,7 +4,8 @@
 $threshold = 90
 
 # Get current disk usage for the root directory (/)
-$diskUsage = (df -h / | Select-String -Pattern '^[^ ]+' | ForEach-Object { $_.Line.Split(' ')[4].TrimEnd('%') }) -as [int]
+$diskUsageLine = df -h / | Select-String -Pattern '/.*' | ForEach-Object { $_.Line }
+$diskUsage = $diskUsageLine.Split(' ')[4].TrimEnd('%') -as [int]
 
 # Check if disk usage exceeds threshold
 if ($diskUsage -ge $threshold) {
